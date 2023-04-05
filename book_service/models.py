@@ -17,3 +17,6 @@ class Book(models.Model):
         default_currency="USD",
         max_digits=11,
     )
+
+    def __str__(self):
+        return self.title
