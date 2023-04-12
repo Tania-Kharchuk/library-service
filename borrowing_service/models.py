@@ -17,4 +17,4 @@ class Borrowing(models.Model):
         ordering = ["-borrow_date"]
 
     def __str__(self):
-        return f"{self.user} borrowed {self.book.title}"
+        return f"{self.user.get_full_name()} borrowed {self.book.title}"
