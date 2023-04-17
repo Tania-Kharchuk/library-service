@@ -4,6 +4,7 @@ from rest_framework import serializers
 from book_service.models import Book
 from book_service.serializers import BookSerializer
 from borrowing_service.models import Borrowing
+from borrowing_service.notifications import send_telegram_notification
 
 
 class BorrowingDetailSerializer(serializers.ModelSerializer):
@@ -46,6 +47,11 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
             book = validated_data["book"]
             borrowing = Borrowing.objects.create(**validated_data)
             Book.objects.filter(pk=book.id).update(inventory=book.inventory - 1)
+            message = (
+                f"New borrowing created:\nUser: {borrowing.user}\n"
+                f"Book: {borrowing.book}\nBorrow date: {borrowing.borrow_date}"
+            )
+            send_telegram_notification(message)
             return borrowing
 
 
