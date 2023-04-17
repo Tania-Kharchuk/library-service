@@ -1,12 +1,19 @@
+import datetime
+
+from django.db import transaction
+from django.shortcuts import get_object_or_404
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, mixins, status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from borrowing_service.models import Borrowing
 from borrowing_service.serializers import (
     BorrowingDetailSerializer,
     BorrowingCreateSerializer,
+    BorrowingReturnSerializer,
 )
 
 
@@ -62,3 +69,29 @@ class BorrowingViewSet(
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+
+
+class BorrowingReturnView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    @extend_schema(
+        responses={200: BorrowingDetailSerializer},
+        methods=["POST"],
+    )
+    def post(self, request, pk):
+        """Return borrowed book"""
+        with transaction.atomic():
+            borrowing = get_object_or_404(Borrowing, id=pk)
+            serializer = BorrowingReturnSerializer(
+                borrowing, data=request.data, partial=True
+            )
+            if serializer.is_valid():
+                borrowing.actual_return_date = datetime.datetime.now()
+                borrowing.save()
+                book = borrowing.book
+                book.inventory += 1
+                book.save()
+                serializer.save()
+                response_serializer = BorrowingDetailSerializer(borrowing)
+                return Response(response_serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
