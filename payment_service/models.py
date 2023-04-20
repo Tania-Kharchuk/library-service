@@ -14,7 +14,7 @@ class Payment(models.Model):
 
     status = models.CharField(max_length=7, choices=Status.choices)
     type = models.CharField(max_length=7, choices=Type.choices)
-    borrowing_id = models.ForeignKey(
+    borrowing = models.ForeignKey(
         Borrowing, on_delete=models.CASCADE, related_name="payments"
     )
     session_url = models.URLField()
