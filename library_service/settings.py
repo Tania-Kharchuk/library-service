@@ -169,3 +169,4 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": crontab(minute=0, hour=9),
     },
 }
+STRIPE_API_KEY = os.environ["STRIPE_API_KEY"]
