@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "user_service",
     "borrowing_service",
     "django_celery_beat",
+    "payment_service",
 ]
 
 MIDDLEWARE = [
