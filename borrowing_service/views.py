@@ -1,7 +1,6 @@
-import datetime
-
 from django.db import transaction
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, mixins, status
@@ -15,6 +14,7 @@ from borrowing_service.serializers import (
     BorrowingCreateSerializer,
     BorrowingReturnSerializer,
 )
+from payment_service.sessions import create_payment_session
 
 
 class BorrowingViewSet(
@@ -86,8 +86,14 @@ class BorrowingReturnView(APIView):
                 borrowing, data=request.data, partial=True
             )
             if serializer.is_valid():
-                borrowing.actual_return_date = datetime.datetime.now()
+                borrowing.actual_return_date = timezone.now()
                 borrowing.save()
+                if borrowing.actual_return_date > borrowing.expected_return_date:
+                    days = (
+                        borrowing.actual_return_date.date()
+                        - borrowing.expected_return_date.date()
+                    ).days
+                    create_payment_session(borrowing, days)
                 book = borrowing.book
                 book.inventory += 1
                 book.save()
