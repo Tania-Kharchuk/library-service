@@ -5,6 +5,8 @@ from book_service.models import Book
 from book_service.serializers import BookSerializer
 from borrowing_service.models import Borrowing
 from borrowing_service.notifications import send_telegram_notification
+from payment_service.serializers import PaymentSerializer
+from payment_service.sessions import create_payment_session
 
 
 class BorrowingDetailSerializer(serializers.ModelSerializer):
@@ -27,6 +29,8 @@ class BorrowingDetailSerializer(serializers.ModelSerializer):
 
 
 class BorrowingCreateSerializer(serializers.ModelSerializer):
+    payments = PaymentSerializer(many=True, read_only=True)
+
     class Meta:
         model = Borrowing
         fields = (
@@ -35,6 +39,7 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
             "expected_return_date",
             "actual_return_date",
             "book",
+            "payments",
         )
 
     def validate(self, attrs):
@@ -46,11 +51,13 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
         with transaction.atomic():
             book = validated_data["book"]
             borrowing = Borrowing.objects.create(**validated_data)
+            create_payment_session(borrowing)
             Book.objects.filter(pk=book.id).update(inventory=book.inventory - 1)
             message = (
                 f"New borrowing created:\nUser: {borrowing.user}\n"
                 f"Book: {borrowing.book}\nBorrow date: {borrowing.borrow_date}"
             )
+
             send_telegram_notification(message)
             return borrowing
 
