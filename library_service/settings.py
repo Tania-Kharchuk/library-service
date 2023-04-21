@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "djmoney",
     "rest_framework",
     "drf_spectacular",
     "book_service",
