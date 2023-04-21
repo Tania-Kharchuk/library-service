@@ -18,8 +18,8 @@ def create_payment(borrowing, session):
 
 
 def create_payment_session(borrowing):
-    days = (borrowing.expected_return_date - borrowing.actual_return_date).days
-    amount = borrowing.book.inventory * days * 100
+    days = (borrowing.expected_return_date - borrowing.borrow_date).days
+    amount = int(borrowing.book.daily_fee) * days * 100
     session = stripe.checkout.Session.create(
         line_items=[
             {
