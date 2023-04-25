@@ -1,10 +1,13 @@
 import stripe
 
+from django.urls import reverse
+
 from borrowing_service.models import Borrowing
 from library_service import settings
 from payment_service.models import Payment
 
 stripe.api_key = settings.STRIPE_API_KEY
+BACKEND_URL = settings.BACKEND_URL
 FINE_MULTIPLIER = 2
 
 
@@ -45,8 +48,10 @@ def create_payment_session(
             }
         ],
         mode="payment",
-        success_url="http://127.0.0.1:8000/api/payments",
-        cancel_url="http://127.0.0.1:8000/api/payments",
+        success_url=f"{BACKEND_URL}{reverse('payment_service:success')}"
+        + "?session_id={CHECKOUT_SESSION_ID}",
+        cancel_url=f"{BACKEND_URL}{reverse('payment_service:cancel')}"
+        + "?session_id={CHECKOUT_SESSION_ID}",
     )
     create_payment(borrowing, session, payment_type)
     return session
