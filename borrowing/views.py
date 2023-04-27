@@ -61,60 +61,12 @@ class BorrowingViewSet(
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-    # @action(
-    #     methods=["POST"],
-    #     detail=True,
-    #     url_path="return",
-    # )
-    # def return_book(self, request, pk):
-    #     """Return borrowed book"""
-    #     with transaction.atomic():
-    #         borrowing = get_object_or_404(Borrowing, id=pk)
-    #         serializer = BorrowingReturnSerializer(
-    #             borrowing, data=request.data, partial=True
-    #         )
-    #         serializer.is_valid(raise_exception=True)
-    #         borrowing.actual_return_date = timezone.now()
-    #         borrowing.save()
-    #         if borrowing.actual_return_date > borrowing.expected_return_date:
-    #             days = (
-    #                 borrowing.actual_return_date.date()
-    #                 - borrowing.expected_return_date.date()
-    #             ).days
-    #             create_payment_session(borrowing, days)
-    #         book = borrowing.book
-    #         book.inventory += 1
-    #         book.save()
-    #         serializer.save()
-    #         response_serializer = BorrowingDetailSerializer(borrowing)
-    #         return Response(response_serializer.data, status=status.HTTP_200_OK)
-
-    @extend_schema(
-        parameters=[
-            OpenApiParameter(
-                "is_active",
-                type=OpenApiTypes.BOOL,
-                description="Filter by active borrowings (ex. ?is_active=true)",
-            ),
-            OpenApiParameter(
-                "user_id",
-                type=OpenApiTypes.INT,
-                description="Filter by user_id (ex. ?user_id=2)",
-            ),
-        ]
-    )
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
-
-
-class BorrowingReturnView(APIView):
-    permission_classes = (IsAuthenticated,)
-
-    @extend_schema(
-        responses={200: BorrowingDetailSerializer},
+    @action(
         methods=["POST"],
+        detail=True,
+        url_path="return",
     )
-    def post(self, request, pk):
+    def return_book(self, request, pk):
         """Return borrowed book"""
         with transaction.atomic():
             borrowing = get_object_or_404(Borrowing, id=pk)
@@ -136,3 +88,51 @@ class BorrowingReturnView(APIView):
             serializer.save()
             response_serializer = BorrowingDetailSerializer(borrowing)
             return Response(response_serializer.data, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "is_active",
+                type=OpenApiTypes.BOOL,
+                description="Filter by active borrowings (ex. ?is_active=true)",
+            ),
+            OpenApiParameter(
+                "user_id",
+                type=OpenApiTypes.INT,
+                description="Filter by user_id (ex. ?user_id=2)",
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+
+# class BorrowingReturnView(APIView):
+#     permission_classes = (IsAuthenticated,)
+#
+#     @extend_schema(
+#         responses={200: BorrowingDetailSerializer},
+#         methods=["POST"],
+#     )
+#     def post(self, request, pk):
+#         """Return borrowed book"""
+#         with transaction.atomic():
+#             borrowing = get_object_or_404(Borrowing, id=pk)
+#             serializer = BorrowingReturnSerializer(
+#                 borrowing, data=request.data, partial=True
+#             )
+#             serializer.is_valid(raise_exception=True)
+#             borrowing.actual_return_date = timezone.now()
+#             borrowing.save()
+#             if borrowing.actual_return_date > borrowing.expected_return_date:
+#                 days = (
+#                     borrowing.actual_return_date.date()
+#                     - borrowing.expected_return_date.date()
+#                 ).days
+#                 create_payment_session(borrowing, days)
+#             book = borrowing.book
+#             book.inventory += 1
+#             book.save()
+#             serializer.save()
+#             response_serializer = BorrowingDetailSerializer(borrowing)
+#             return Response(response_serializer.data, status=status.HTTP_200_OK)

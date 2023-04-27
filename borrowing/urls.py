@@ -1,7 +1,7 @@
 from rest_framework import routers
 from django.urls import path, include
 
-from borrowing.views import BorrowingViewSet, BorrowingReturnView
+from borrowing.views import BorrowingViewSet
 
 router = routers.DefaultRouter()
 
@@ -9,7 +9,11 @@ router = routers.DefaultRouter()
 router.register("", BorrowingViewSet)
 
 urlpatterns = [
-    path("<int:pk>/return", BorrowingReturnView.as_view(), name="return"),
+    path(
+        "<int:pk>/return",
+        BorrowingViewSet.as_view({"post": "return_book"}),
+        name="return",
+    ),
     path("", include(router.urls)),
 ]
 
