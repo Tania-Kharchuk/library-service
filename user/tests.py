@@ -4,10 +4,10 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from user_service.serializers import UserSerializer
+from user.serializers import UserSerializer
 
-USER_CREATE_URL = reverse("user_service:create")
-USER_MANAGE_URL = reverse("user_service:manage")
+USER_CREATE_URL = reverse("user:create")
+USER_MANAGE_URL = reverse("user:manage")
 
 
 def sample_user(**params):

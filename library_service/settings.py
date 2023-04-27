@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_spectacular",
     "book",
-    "user_service",
+    "user",
     "borrowing_service",
     "django_celery_beat",
     "payment_service",
@@ -114,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = "user_service.User"
+AUTH_USER_MODEL = "user.User"
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
