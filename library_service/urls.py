@@ -20,15 +20,15 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/books/", include("book_service.urls", namespace="book_service")),
+    path("api/books/", include("book.urls", namespace="book")),
     path(
         "api/borrowings/",
-        include("borrowing_service.urls", namespace="borrowing_service"),
+        include("borrowing.urls", namespace="borrowing"),
     ),
-    path("api/users/", include("user_service.urls", namespace="user_service")),
+    path("api/users/", include("user.urls", namespace="user")),
     path(
         "api/payments/",
-        include("payment_service.urls", namespace="payment_service"),
+        include("payment.urls", namespace="payment"),
     ),
     path("api/doc/", SpectacularAPIView.as_view(), name="schema"),
     path(
