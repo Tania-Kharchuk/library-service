@@ -72,9 +72,11 @@ class PaymentViewSet(
                 f"available for the next {time_remaining}."
             )
             return Response(
-                {"message": message, "data": serializer.data}, status=status.HTTP_200_OK
+                {"message": message, "data": serializer.data},
+                status=status.HTTP_200_OK,
             )
         message = f"Your payment has been already paid."
         return Response(
-            {"message": message, "data": serializer.data}, status=status.HTTP_200_OK
+            {"message": message, "data": serializer.data},
+            status=status.HTTP_200_OK,
         )
