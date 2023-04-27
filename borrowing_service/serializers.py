@@ -5,8 +5,8 @@ from book.models import Book
 from book.serializers import BookSerializer
 from borrowing_service.models import Borrowing
 from borrowing_service.notifications import send_telegram_notification
-from payment_service.serializers import PaymentSerializer
-from payment_service.sessions import create_payment_session
+from payment.serializers import PaymentSerializer
+from payment.sessions import create_payment_session
 
 
 class BorrowingDetailSerializer(serializers.ModelSerializer):

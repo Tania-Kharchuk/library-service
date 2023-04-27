@@ -4,7 +4,7 @@ from django.urls import reverse
 
 from borrowing_service.models import Borrowing
 from library_service import settings
-from payment_service.models import Payment
+from payment.models import Payment
 
 stripe.api_key = settings.STRIPE_API_KEY
 BACKEND_URL = settings.BACKEND_URL
@@ -48,9 +48,9 @@ def create_payment_session(
             }
         ],
         mode="payment",
-        success_url=f"{BACKEND_URL}{reverse('payment_service:success')}"
+        success_url=f"{BACKEND_URL}{reverse('payment:success')}"
         + "?session_id={CHECKOUT_SESSION_ID}",
-        cancel_url=f"{BACKEND_URL}{reverse('payment_service:cancel')}"
+        cancel_url=f"{BACKEND_URL}{reverse('payment:cancel')}"
         + "?session_id={CHECKOUT_SESSION_ID}",
     )
     create_payment(borrowing, session, payment_type)

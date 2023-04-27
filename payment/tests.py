@@ -10,14 +10,14 @@ from rest_framework.test import APIClient
 from book.tests import sample_book
 from borrowing_service.models import Borrowing
 from borrowing_service.tests import sample_borrowing
-from payment_service.models import Payment
-from payment_service.serializers import PaymentSerializer
+from payment.models import Payment
+from payment.serializers import PaymentSerializer
 
-PAYMENT_URL = reverse("payment_service:payment-list")
+PAYMENT_URL = reverse("payment:payment-list")
 
 
 def detail_url(payment_id):
-    return reverse("payment_service:payment-detail", args=[payment_id])
+    return reverse("payment:payment-detail", args=[payment_id])
 
 
 class UnauthenticatedPaymentApiTests(TestCase):

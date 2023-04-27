@@ -8,8 +8,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 
-from payment_service.models import Payment
-from payment_service.serializers import PaymentSerializer
+from payment.models import Payment
+from payment.serializers import PaymentSerializer
 
 
 class PaymentPagination(PageNumberPagination):
