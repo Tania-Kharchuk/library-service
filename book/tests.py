@@ -4,10 +4,10 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from book_service.models import Book
-from book_service.serializers import BookSerializer
+from book.models import Book
+from book.serializers import BookSerializer
 
-BOOK_URL = reverse("book_service:book-list")
+BOOK_URL = reverse("book:book-list")
 
 
 def sample_book(**params):
@@ -24,7 +24,7 @@ def sample_book(**params):
 
 
 def detail_url(book_id):
-    return reverse("book_service:book-detail", args=[book_id])
+    return reverse("book:book-detail", args=[book_id])
 
 
 class UnauthenticatedBookApiTests(TestCase):

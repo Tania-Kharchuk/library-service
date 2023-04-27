@@ -7,7 +7,7 @@ from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from book_service.tests import sample_book
+from book.tests import sample_book
 from borrowing_service.models import Borrowing
 from borrowing_service.tests import sample_borrowing
 from payment_service.models import Payment

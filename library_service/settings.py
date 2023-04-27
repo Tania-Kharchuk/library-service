@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "drf_spectacular",
-    "book_service",
+    "book",
     "user_service",
     "borrowing_service",
     "django_celery_beat",

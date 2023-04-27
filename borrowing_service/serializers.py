@@ -1,8 +1,8 @@
 from django.db import transaction
 from rest_framework import serializers
 
-from book_service.models import Book
-from book_service.serializers import BookSerializer
+from book.models import Book
+from book.serializers import BookSerializer
 from borrowing_service.models import Borrowing
 from borrowing_service.notifications import send_telegram_notification
 from payment_service.serializers import PaymentSerializer

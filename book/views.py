@@ -2,8 +2,8 @@ from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAdminUser
 
-from book_service.models import Book
-from book_service.serializers import BookSerializer
+from book.models import Book
+from book.serializers import BookSerializer
 
 
 class BookPagination(PageNumberPagination):
