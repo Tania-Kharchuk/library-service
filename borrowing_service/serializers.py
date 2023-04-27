@@ -47,3 +47,26 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
             borrowing = Borrowing.objects.create(**validated_data)
             Book.objects.filter(pk=book.id).update(inventory=book.inventory - 1)
             return borrowing
+
+
+class BorrowingReturnSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Borrowing
+        fields = (
+            "id",
+            "borrow_date",
+            "expected_return_date",
+            "actual_return_date",
+            "book",
+        )
+        read_only_fields = (
+            "id",
+            "borrow_date",
+            "expected_return_date",
+            "book",
+        )
+
+    def validate(self, attrs):
+        if self.instance.actual_return_date is not None:
+            raise serializers.ValidationError("This book is already returned")
+        return attrs
