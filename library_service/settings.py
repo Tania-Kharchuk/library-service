@@ -172,7 +172,7 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 
 CELERY_BEAT_SCHEDULE = {
     "notification_about_overdue_borrowings": {
-        "task": "borrowing.tasks.notification_about_overdue_borrowings",
+        "task": "borrowing_service.tasks.notification_about_overdue_borrowings",
         "schedule": crontab(minute=0, hour=9),
     },
 }
