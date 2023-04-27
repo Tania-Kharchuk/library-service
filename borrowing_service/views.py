@@ -4,6 +4,7 @@ from django.utils import timezone
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, mixins, status
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -17,6 +18,11 @@ from borrowing_service.serializers import (
 from payment_service.sessions import create_payment_session
 
 
+class BorrowingPagination(PageNumberPagination):
+    page_size = 5
+    max_page_size = 100
+
+
 class BorrowingViewSet(
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
@@ -26,6 +32,7 @@ class BorrowingViewSet(
     queryset = Borrowing.objects.select_related("book", "user")
     serializer_class = BorrowingDetailSerializer
     permission_classes = (IsAuthenticated,)
+    pagination_class = BorrowingPagination
 
     def get_queryset(self):
         is_active = self.request.query_params.get("is_active")
