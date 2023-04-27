@@ -3,12 +3,18 @@ from datetime import datetime, timedelta
 import stripe
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 
 from payment_service.models import Payment
 from payment_service.serializers import PaymentSerializer
+
+
+class PaymentPagination(PageNumberPagination):
+    page_size = 5
+    max_page_size = 100
 
 
 class PaymentViewSet(
@@ -19,6 +25,7 @@ class PaymentViewSet(
     queryset = Payment.objects.select_related("borrowing")
     permission_classes = (IsAuthenticated,)
     serializer_class = PaymentSerializer
+    pagination_class = PaymentPagination
 
     def get_queryset(self):
         queryset = self.queryset
