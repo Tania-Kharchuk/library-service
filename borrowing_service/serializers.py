@@ -12,6 +12,7 @@ from payment_service.sessions import create_payment_session
 class BorrowingDetailSerializer(serializers.ModelSerializer):
     book = BookSerializer(many=False, read_only=True)
     user = serializers.SerializerMethodField()
+    payments = PaymentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Borrowing
@@ -22,6 +23,7 @@ class BorrowingDetailSerializer(serializers.ModelSerializer):
             "actual_return_date",
             "book",
             "user",
+            "payments",
         )
 
     def get_user(self, object):
