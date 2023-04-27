@@ -6,7 +6,7 @@ from payment_service.serializers import PaymentSerializer
 
 
 class PaymentViewSet(viewsets.ModelViewSet):
-    queryset = Payment.objects.all()
+    queryset = Payment.objects.select_related("borrowing")
     serializer_class = PaymentSerializer
     permission_classes = (IsAuthenticated,)
 
