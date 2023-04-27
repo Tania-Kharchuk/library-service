@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("borrowing_service", "0001_initial"),
+        ("borrowing", "0001_initial"),
     ]
 
     operations = [
@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="payments",
-                        to="borrowing_service.borrowing",
+                        to="borrowing.borrowing",
                     ),
                 ),
             ],

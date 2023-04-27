@@ -1,6 +1,6 @@
 from django.db import models
 
-from borrowing_service.models import Borrowing
+from borrowing.models import Borrowing
 
 
 class Payment(models.Model):

@@ -8,8 +8,8 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from book.tests import sample_book
-from borrowing_service.models import Borrowing
-from borrowing_service.tests import sample_borrowing
+from borrowing.models import Borrowing
+from borrowing.tests import sample_borrowing
 from payment.models import Payment
 from payment.serializers import PaymentSerializer
 

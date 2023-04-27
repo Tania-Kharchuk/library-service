@@ -3,8 +3,8 @@ from rest_framework import serializers
 
 from book.models import Book
 from book.serializers import BookSerializer
-from borrowing_service.models import Borrowing
-from borrowing_service.notifications import send_telegram_notification
+from borrowing.models import Borrowing
+from borrowing.notifications import send_telegram_notification
 from payment.serializers import PaymentSerializer
 from payment.sessions import create_payment_session
 

@@ -2,7 +2,7 @@ import stripe
 
 from django.urls import reverse
 
-from borrowing_service.models import Borrowing
+from borrowing.models import Borrowing
 from library_service import settings
 from payment.models import Payment
 

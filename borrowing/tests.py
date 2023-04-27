@@ -7,16 +7,15 @@ from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from book_service.models import Book
-from book_service.tests import sample_book
-from borrowing_service.models import Borrowing
-from borrowing_service.serializers import (
+from book.models import Book
+from book.tests import sample_book
+from borrowing.models import Borrowing
+from borrowing.serializers import (
     BorrowingDetailSerializer,
-    BorrowingCreateSerializer,
 )
-from user_service.tests import sample_user
+from user.tests import sample_user
 
-BORROWING_URL = reverse("borrowing_service:borrowing-list")
+BORROWING_URL = reverse("borrowing:borrowing-list")
 
 
 def sample_borrowing(**params):
@@ -31,11 +30,11 @@ def sample_borrowing(**params):
 
 
 def detail_url(borrowing_id):
-    return reverse("borrowing_service:borrowing-detail", args=[borrowing_id])
+    return reverse("borrowing:borrowing-detail", args=[borrowing_id])
 
 
 def return_url(borrowing_id):
-    return reverse("borrowing_service:return", args=[borrowing_id])
+    return reverse("borrowing:return", args=[borrowing_id])
 
 
 class UnauthenticatedBorrowingApiTests(TestCase):

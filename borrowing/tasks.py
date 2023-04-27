@@ -1,10 +1,10 @@
 import datetime
 
-from borrowing_service.models import Borrowing
+from borrowing.models import Borrowing
 
 from celery import shared_task
 
-from borrowing_service.notifications import send_telegram_notification
+from borrowing.notifications import send_telegram_notification
 
 
 @shared_task

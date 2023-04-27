@@ -4,18 +4,19 @@ from django.utils import timezone
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, mixins, status
+from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from borrowing_service.models import Borrowing
-from borrowing_service.serializers import (
+from borrowing.models import Borrowing
+from borrowing.serializers import (
     BorrowingDetailSerializer,
     BorrowingCreateSerializer,
     BorrowingReturnSerializer,
 )
-from payment_service.sessions import create_payment_session
+from payment.sessions import create_payment_session
 
 
 class BorrowingPagination(PageNumberPagination):
@@ -60,6 +61,34 @@ class BorrowingViewSet(
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+    # @action(
+    #     methods=["POST"],
+    #     detail=True,
+    #     url_path="return",
+    # )
+    # def return_book(self, request, pk):
+    #     """Return borrowed book"""
+    #     with transaction.atomic():
+    #         borrowing = get_object_or_404(Borrowing, id=pk)
+    #         serializer = BorrowingReturnSerializer(
+    #             borrowing, data=request.data, partial=True
+    #         )
+    #         serializer.is_valid(raise_exception=True)
+    #         borrowing.actual_return_date = timezone.now()
+    #         borrowing.save()
+    #         if borrowing.actual_return_date > borrowing.expected_return_date:
+    #             days = (
+    #                 borrowing.actual_return_date.date()
+    #                 - borrowing.expected_return_date.date()
+    #             ).days
+    #             create_payment_session(borrowing, days)
+    #         book = borrowing.book
+    #         book.inventory += 1
+    #         book.save()
+    #         serializer.save()
+    #         response_serializer = BorrowingDetailSerializer(borrowing)
+    #         return Response(response_serializer.data, status=status.HTTP_200_OK)
+
     @extend_schema(
         parameters=[
             OpenApiParameter(
@@ -92,19 +121,18 @@ class BorrowingReturnView(APIView):
             serializer = BorrowingReturnSerializer(
                 borrowing, data=request.data, partial=True
             )
-            if serializer.is_valid():
-                borrowing.actual_return_date = timezone.now()
-                borrowing.save()
-                if borrowing.actual_return_date > borrowing.expected_return_date:
-                    days = (
-                        borrowing.actual_return_date.date()
-                        - borrowing.expected_return_date.date()
-                    ).days
-                    create_payment_session(borrowing, days)
-                book = borrowing.book
-                book.inventory += 1
-                book.save()
-                serializer.save()
-                response_serializer = BorrowingDetailSerializer(borrowing)
-                return Response(response_serializer.data, status=status.HTTP_200_OK)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            serializer.is_valid(raise_exception=True)
+            borrowing.actual_return_date = timezone.now()
+            borrowing.save()
+            if borrowing.actual_return_date > borrowing.expected_return_date:
+                days = (
+                    borrowing.actual_return_date.date()
+                    - borrowing.expected_return_date.date()
+                ).days
+                create_payment_session(borrowing, days)
+            book = borrowing.book
+            book.inventory += 1
+            book.save()
+            serializer.save()
+            response_serializer = BorrowingDetailSerializer(borrowing)
+            return Response(response_serializer.data, status=status.HTTP_200_OK)
